@@ -58,7 +58,6 @@ start_date: 2020-01-01
 end_date: 2024-12-31
 include_countries:
   - United States
-  - United Kingdom
 exclude_countries:
   - Canada
 min_runtime: 90
