@@ -110,7 +110,6 @@ IMDb-Advanced-Search/
 │   └── search_query.yml
 ├── environment.yml
 ├── search.py
-├── setup.py
 ├── valid_parameters.py
 └── README.md
 ```
