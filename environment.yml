@@ -1,0 +1,10 @@
+name: imdb_env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  - pyyaml
+  - beautifulsoup4
+  - selenium

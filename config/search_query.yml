@@ -1,0 +1,53 @@
+# Template for search queries creation
+# Full list of IMDb title types:
+#   feature, tv_series, short, tv_episode, tv_miniseries, tv_movie, tv_special, 
+#   tv_short, music_video, video, video_game, podcast_series, podcast_episode
+title_type: 
+  - feature
+  - tv_miniseries
+  - tv_series
+# Full list of IMDb genres :
+#   action, adventure, animation, biography, comedy, crime, documentary, 
+#   drama, family, fantasy, film-noir, game-show, history, horror, 
+#   music, musical, mystery, news, reality-tv, romance, sci-fi, short, 
+#   sport, talk-show, thriller, war, western
+include_genres: 
+  - action
+  - comedy
+exclude_genres:
+  - documentary
+  - reality-tv
+  - short
+  - short
+  - talk-show
+  - music
+  - musical
+  - romance
+  - animation
+  - game-show
+  - western
+min_votes: 10000
+max_votes: 100000
+min_rating: 7.0
+max_rating: 10.0
+start_date: 2000-01-01
+end_date: 2023-12-31 
+# Full list of IMDb countries: 
+#   https://help.imdb.com/article/contribution/other-submission-guides/country-codes/G99K4LFRMSC37DCN#
+include_countries:
+  - United States
+exclude_countries:
+  - India
+  - Turkey
+  - Mexico
+min_runtime: 60
+max_runtime: 180
+# Sort types: moviemeter, user_rating, num_votes
+sort_type: user_rating
+# Sort options: asc, desc
+sort_option: desc
+exclude_keywords:
+  - sitcom
+  - sitcom-comedy
+  - teenager
+  - teen-drama
