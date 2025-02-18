@@ -1,6 +1,6 @@
+import argparse
 from urllib.parse import urlencode
 import yaml
-
 import re
 from valid_parameters import COUNTRY_NAME_TO_CODE, VALID_GENRES
 
@@ -46,7 +46,7 @@ def create_imdb_search_url(include_genres=None, exclude_genres=None, min_votes=N
         exclude_countries (list of str): Countries to exclude.
         min_runtime (int): Minimum runtime in minutes.
         max_runtime (int): Maximum runtime in minutes.
-        sort_type (str): Sorting type (popularity, user_rating, num_votes).
+        sort_type (str): Sorting type (moviemeter, user_rating, num_votes).
         sort_option (str): Sorting option (asc or desc).
         title_type (list of str): List of title types (e.g., feature, tv_series, etc.).
 
@@ -117,50 +117,54 @@ def create_imdb_search_url(include_genres=None, exclude_genres=None, min_votes=N
             raise ValueError(f"Invalid title types specified: {', '.join(invalid_title_types)}")
         query_params["title_type"] = ",".join(title_type)
 
-    # Construct the URL
+    # Construct the URL with commas preserved (using safe=',')
     base_url = "https://www.imdb.com/search/title/"
-    full_url = f"{base_url}?{urlencode(query_params)}"
+    full_url = f"{base_url}?{urlencode(query_params, safe=',')}"
     
     return full_url
 
 def main():
-    with open("config/search_query.yml") as stream:
+    # Parse command-line arguments for config file path
+    parser = argparse.ArgumentParser(description="Generate IMDb search URL from configuration.")
+    parser.add_argument("--config", type=str, default="config/default_query.yml", help="Path to the YAML config file")
+    args = parser.parse_args()
+
+    # Load query parameters from the specified YAML file
+    with open(args.config) as stream:
         try:
             query_parameters = yaml.safe_load(stream)
         except yaml.YAMLError as exc:
             print(exc)
+            return
 
-
+    # Construct the URL using the parameters from the YAML file
     url = create_imdb_search_url(
-        include_genres=query_parameters['include_genres'],
-        exclude_genres=query_parameters['exclude_genres'],
-        min_votes=query_parameters['min_votes'],
-        max_votes=query_parameters['max_votes'],
-        min_rating=query_parameters['min_rating'],
-        max_rating=query_parameters['max_rating'],
-        start_date=query_parameters['start_date'].strftime('%Y-%m-%d'),
-        end_date=query_parameters['end_date'].strftime('%Y-%m-%d'),
-        include_countries=query_parameters['include_countries'],
-        exclude_countries=query_parameters['exclude_countries'],
-        min_runtime=query_parameters['min_runtime'],
-        max_runtime=query_parameters['max_runtime'],
-        sort_type=query_parameters['sort_type'],
-        sort_option=query_parameters['sort_option'],
-        title_type=query_parameters['title_type']
+        include_genres=query_parameters.get('include_genres'),
+        exclude_genres=query_parameters.get('exclude_genres'),
+        min_votes=query_parameters.get('min_votes'),
+        max_votes=query_parameters.get('max_votes'),
+        min_rating=query_parameters.get('min_rating'),
+        max_rating=query_parameters.get('max_rating'),
+        start_date=query_parameters.get('start_date').strftime('%Y-%m-%d') if query_parameters.get('start_date') else None,
+        end_date=query_parameters.get('end_date').strftime('%Y-%m-%d') if query_parameters.get('end_date') else None,
+        include_countries=query_parameters.get('include_countries'),
+        exclude_countries=query_parameters.get('exclude_countries'),
+        min_runtime=query_parameters.get('min_runtime'),
+        max_runtime=query_parameters.get('max_runtime'),
+        sort_type=query_parameters.get('sort_type'),
+        sort_option=query_parameters.get('sort_option'),
+        title_type=query_parameters.get('title_type')
     )
-    exclude_keywords = query_parameters['exclude_keywords']
-    exclude_keywords_str = '&keywords='
-    first = True
-    for exclude_keyword in exclude_keywords:
-        if first:
-            exclude_keywords_str += f'!{exclude_keyword}'
-            first = False
-        else:
-            exclude_keywords_str += f',!{exclude_keyword}'
+    
+    # Append exclude keywords if provided
+    exclude_keywords = query_parameters.get('exclude_keywords', [])
+    if exclude_keywords:
+        exclude_keywords_str = '&keywords=' + ','.join(f'!{kw}' for kw in exclude_keywords)
+        url += exclude_keywords_str
 
-    url += exclude_keywords_str
     url += '&has=awards'
     print(url)
 
 if __name__ == '__main__':
     main()
+    
