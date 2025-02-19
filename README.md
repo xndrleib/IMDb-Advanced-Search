@@ -6,6 +6,10 @@ IMDb Advanced Search is a Python package for building customized IMDb search URL
 
 IMDb Advanced Search streamlines the process of constructing IMDb search URLs with numerous filters. Whether you want to search for movies with specific genres, ratings, runtime, or any other criteria, this tool offers a simple yet powerful solution to build your custom queries.
 
+## Motivation
+
+IMDb's advanced search UI has its limitations—particularly, it restricts the ability to **exclude** certain countries and genres. This project was born out of the need to overcome these restrictions, providing users with a flexible, command-line tool that lets you generate precise search URLs. With this package, you can easily filter out unwanted content by excluding specific genres and countries, among other parameters, ensuring that your search results are exactly what you need.
+
 ## Features
 
 - **Genre Filtering:** Include or exclude specific genres.
